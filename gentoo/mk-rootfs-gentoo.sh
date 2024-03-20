@@ -75,13 +75,8 @@ elif [ "$ARCH" == "arm64"  ]; then
 	sudo cp /usr/bin/qemu-aarch64-static ./usr/bin/
 fi
 
-if [ -f "../make.conf" ]; then
-   sudo cp ../make.conf ./etc/portage/
-   sudo cp ../fstab ./etc/
-   sudo cp ../passwd ./etc/
-   sudo cp ../shadow ./etc/
-   sudo cp ../group ./etc/
-   sudo cp ../inittab ./etc/
+if [ -f "../myroot" ]; then
+   sudo rsync -avup --info=progress2 ../myroot/ .
 fi
 
 # sudo cp --dereference /etc/resolv.conf ./etc/
