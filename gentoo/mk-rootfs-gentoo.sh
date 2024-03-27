@@ -74,7 +74,7 @@ elif [ "$ARCH" == "arm64"  ]; then
 	sudo cp /usr/bin/qemu-aarch64-static ./usr/bin/
 fi
 
-sudo rm ./etc/bash/bash.bashrc ./etc/rc.local
+sudo rm ./etc/rc.local
 sudo tar -xvf ../stage3-*.tar.xz
 if [ -f "../myroot" ]; then
    sudo rsync -avup --info=progress2 ../myroot/ .

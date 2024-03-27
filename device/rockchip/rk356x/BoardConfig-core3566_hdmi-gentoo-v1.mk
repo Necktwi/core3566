@@ -27,7 +27,7 @@ export RK_CFG_RECOVERY=rockchip_rk356x_recovery
 # Recovery image format type: fit(flattened image tree)
 export RK_RECOVERY_FIT_ITS=boot4recovery.its
 # ramboot config
-export RK_CFG_RAMBOOT=
+export RK_CFG_RAMBOOT=rockchip_rk3566
 # Pcba config
 export RK_CFG_PCBA=
 # Build jobs

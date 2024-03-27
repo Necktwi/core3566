@@ -674,7 +674,7 @@ function build_kernel(){
 			$TOP_DIR/u-boot/boot.img
 	fi
 
-	build_check_power_domain
+#	build_check_power_domain
 
 	finish_build
 }
@@ -1079,8 +1079,9 @@ function build_cleanall(){
 	cd -
 	rm -rf buildroot/output
 	rm -rf yocto/build/tmp
-	rm -rf debian/binary
-
+	sudo rm -rf debian/binary
+   sudo rm -rf gentoo/binary
+   
 	finish_build
 }
 
@@ -1230,7 +1231,7 @@ function build_allsave(){
 	build_updateimg
 	build_save
 
-	build_check_power_domain
+#	build_check_power_domain
 
 	finish_build
 }
