@@ -578,6 +578,11 @@ function build_uboot(){
 	echo "========================================="
 
 	cd u-boot
+   if [ "$NOCLEAN" ] && [ $ls *_loader_*.bin ]; then
+      echo "uboot already built. skipping"
+      finish_build
+      return 0
+   fi
 	rm -f *_loader_*.bin
 	if [ "$RK_LOADER_UPDATE_SPL" = "true" ]; then
 		rm -f *spl.bin
@@ -653,6 +658,12 @@ function build_kernel(){
 	echo "TARGET_KERNEL_CONFIG_FRAGMENT =$RK_KERNEL_DEFCONFIG_FRAGMENT"
 	echo "=========================================="
 
+   if [ "$NOCLEAN" ] && [ -f $TOP_DIR/kernel/$RK_BOOT_IMG ]; then
+      echo "kernel already built. skipping"
+      finish_build
+      return 0
+   fi
+
 	build_check_cross_compile
 
 	cd kernel
@@ -693,8 +704,13 @@ function build_modules(){
 	build_check_cross_compile
 
    cd $TOP_DIR/kernel
-	make ARCH=$RK_ARCH $RK_KERNEL_DEFCONFIG $RK_KERNEL_DEFCONFIG_FRAGMENT
-	make ARCH=$RK_ARCH modules -j$RK_JOBS
+   if  [ ! "$NOCLEAN" ] || [ ! -f $TOP_DIR/kernel/$RK_BOOT_IMG ]; then
+	   make ARCH=$RK_ARCH $RK_KERNEL_DEFCONFIG $RK_KERNEL_DEFCONFIG_FRAGMENT
+	   make ARCH=$RK_ARCH modules -j$RK_JOBS
+   else
+      echo "modules already built. skipping build"      
+   fi
+
    sudo make ARCH=$RK_ARCH INSTALL_MOD_PATH=$TARGET_ROOTFS_DIR modules_install 
    finish_build
    popd
@@ -1229,9 +1245,9 @@ function build_allsave(){
 	build_all
 	build_firmware
 	build_updateimg
-	build_save
+#	build_save
 
-#	build_check_power_domain
+	build_check_power_domain
 
 	finish_build
 }

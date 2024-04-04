@@ -7,7 +7,7 @@ export RK_UBOOT_DEFCONFIG=luckfox_rk3566
 # Uboot image format type: fit(flattened image tree)
 export RK_UBOOT_FORMAT_TYPE=fit
 # Kernel defconfig
-export RK_KERNEL_DEFCONFIG=luckfox_core3566_linux_defconfig
+export RK_KERNEL_DEFCONFIG=luckfox_core3566_nowifi_linux_defconfig
 # Kernel defconfig fragment
 export RK_KERNEL_DEFCONFIG_FRAGMENT=
 # Kernel dts
@@ -27,7 +27,7 @@ export RK_CFG_RECOVERY=rockchip_rk356x_recovery
 # Recovery image format type: fit(flattened image tree)
 export RK_RECOVERY_FIT_ITS=boot4recovery.its
 # ramboot config
-export RK_CFG_RAMBOOT=rockchip_rk3566
+#export RK_CFG_RAMBOOT=rockchip_rk3566
 # Pcba config
 export RK_CFG_PCBA=
 # Build jobs

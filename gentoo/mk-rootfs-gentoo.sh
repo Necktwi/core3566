@@ -2,6 +2,10 @@
 
 # Directory contains the target rootfs
 TARGET_ROOTFS_DIR="binary"
+if [ "$NOCLEAN" ] && [ "$(ls $TARGET_ROOTFS_DIR)" ]; then
+   echo "rootfs already extracted. skipping"
+   exit 0
+fi
 
 case "${ARCH:-$1}" in
 	arm|arm32|armhf)
@@ -64,8 +68,10 @@ fi
 # bt/wifi firmware
 sudo mkdir -p ./system/lib/modules/
 sudo mkdir -p ./vendor/etc
-sudo find ../../kernel/drivers/net/wireless/rockchip_wlan/*  -name "*.ko" | \
-    xargs -n1 -i sudo cp {} ./system/lib/modules/
+if [ ! "$(echo $RK_KERNEL_DEFCONFIG | grep nowifi)" ]; then
+   sudo find ../../kernel/drivers/net/wireless/rockchip_wlan/*  -name "*.ko" | \
+      xargs -n1 -i sudo cp {} ./system/lib/modules/
+fi
 
 echo -e "\033[36m Change root.....................\033[0m"
 if [ "$ARCH" == "armhf" ]; then

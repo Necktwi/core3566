@@ -9,6 +9,10 @@ IMAGE_SIZE_MB=$(( $(sudo du -sh -m ${TARGET_ROOTFS_DIR} | cut -f1) + ${EXTRA_SIZ
 echo Making rootfs!
 
 if [ -e ${ROOTFSIMAGE} ]; then
+   if [ "$NOCLEAN" ]; then
+      echo "rootfs-image already build. skipping"
+      exit 0
+   fi
 	rm ${ROOTFSIMAGE}
 fi
 
