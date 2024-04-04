@@ -2,7 +2,7 @@
 
 ## gentoo installation
 1. Follow https://wiki.luckfox.com/Core3566/Core3566-SDK up to 6th point.
-```
+```bash
 cd ~/core3566/; mv kernel kernel-4.19.232; ln -s kernel-4.19.232 kernel; git init
 git add remote origin https://gitlab.com/necktwiozfuagh/core3566.git
 git pull
@@ -19,7 +19,7 @@ export RK_ROOTFS_SYSTEM=gentoo; ./build.sh
 
 ## to build and install only kernel
 1. start the vboxvm
-```
+```bash
 export RK_ROOTFS_SYSTEM=gentoo
 cd ~/core3566/kernel
 make menuconfig #select the modules you need
@@ -32,7 +32,7 @@ cp .config core3566/kernel-4.19.232/arch/arm64/configs/luckfox_core3566_linux_de
 4. Add Item, set name boot, address as per parameter.txt(the hex number next to @), path to boot.img and Run.
 
 ### to generate full image without rebuilding everything
-```
+```bash
 NOCLEAN=1 ./build.sh updateimg
 ```
 
