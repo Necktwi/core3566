@@ -4,7 +4,7 @@
 1. Follow https://wiki.luckfox.com/Core3566/Core3566-SDK up to 6th point.
 ```bash
 cd ~/core3566/; mv kernel kernel-4.19.232; ln -s kernel-4.19.232 kernel; git init
-git add remote origin https://gitlab.com/necktwiozfuagh/core3566.git
+git add remote origin https://github.com/necktwi/core3566.git
 git pull
 # Now download latest arm64 gentoo stage-3 as shown in the next point to gentoo folder.
 cd gentoo;wget https://distfiles.gentoo.org/releases/arm64/autobuilds/20240317T232028Z/stage3-arm64-openrc-20240317T232028Z.tar.xz; cd ..
