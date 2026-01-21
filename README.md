@@ -36,4 +36,4 @@ cp .config core3566/kernel-4.19.232/arch/arm64/configs/luckfox_core3566_linux_de
 NOCLEAN=1 ./build.sh updateimg
 ```
 
-Please rise an issue up on an query.
+Please rise an issue up on a query.
