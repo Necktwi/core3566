@@ -3,15 +3,24 @@
 ## gentoo installation
 1. Follow https://wiki.luckfox.com/Core3566/Core3566-SDK up to 6th point.
 ```bash
-cd ~/core3566/; mv kernel kernel-4.19.232; ln -s kernel-4.19.232 kernel; git init
-git add remote origin https://github.com/necktwi/core3566.git
-git pull
-# Now download latest arm64 gentoo stage-3 as shown in the next point to gentoo folder.
-cd gentoo;wget https://distfiles.gentoo.org/releases/arm64/autobuilds/20240317T232028Z/stage3-arm64-openrc-20240317T232028Z.tar.xz; cd ..
+cd /home/luckfox/core3566/
+mv kernel kernel-4.19.232; ln -s kernel-4.19.232 kernel
+
+cd /home/luckfox/
+git clone https://github.com/necktwi/core3566.git core3566git
+rsync -avPh core3566git/ core3566
+rm -rf core3566git
+
+# download latest arm64 gentoo stage-3
+cd gentoo;wget https://distfiles.gentoo.org/releases/arm64/autobuilds/20260118T234557Z/stage3-arm64-musl-llvm-20260118T234557Z.tar.xz; cd ..
+
+# place your configuration files in ./gentoo/myroot which will be copied to / in image that will be generated.
+# Copy the make.conf corresponding to the downloaded stage-3 to ./gentoo/myroot/etc/portage/make.conf and add VIDEO_CARDS="panfrost" to it
+
+# select BoardConfig-core3566_hdmi-nowifi-gentoo-v1.mk when prompted
 ./build.sh lunch
-# select BoardConfig-core3566_hdmi-gentoo-v1.mk
-# you can place your configuration files in ./gentoo/myroot which will be copied to / in image that will be generated. Copy a gentoo's make.conf corresponding to the downloaded stage-3 to ./gentoo/myroot/etc/portage/make.conf and add VIDEO_CARDS="panfrost" to it
-export RK_ROOTFS_SYSTEM=gentoo; ./build.sh
+export RK_ROOTFS_SYSTEM=gentoo
+./build.sh
 # ./rockdev/update.img will be generated which can be flashed to Core3566
 ```
 2. once the Core3566 is booted expand the root partition using
