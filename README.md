@@ -8,7 +8,7 @@ mv kernel kernel-4.19.232; ln -s kernel-4.19.232 kernel
 
 cd /home/luckfox/
 git clone https://github.com/necktwi/core3566.git core3566git
-rsync -avPh core3566git/ core3566
+rsync -avPh --keep-dirlinks core3566git/ core3566
 rm -rf core3566git
 
 # download latest arm64 gentoo stage-3
