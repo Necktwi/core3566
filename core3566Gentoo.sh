@@ -15,10 +15,18 @@ SUBSYSTEM=="usb", ATTR{idVendor}=="2207", MODE="0666"
 EOF
 sudo udevadm control --reload-rules && sudo udevadm trigger
 
+echoH "Creating required folders..."
 mkdir -p ~/workspace/aarch64-gentoo-linux-musl
 mkdir -p ~/workspace/gentooRepos
 mkdir -p ~/workspace/distfiles
 cd ~/workspace
+
+if ! [ -f installGentoo.sh ]; then
+	echoH "Downloading build scripts..."
+	curl -LO https://raw.githubusercontent.com/Necktwi/core3566/refs/heads/master/installGentoo.sh
+	curl -LO https://raw.githubusercontent.com/Necktwi/core3566/refs/heads/master/installGentoo-1.sh
+	curl -LO https://raw.githubusercontent.com/Necktwi/core3566/refs/heads/master/installGentoo2.sh
+fi
 if ! [ -f stage3-arm64-musl-llvm.tar.xz ]; then
 	echoH "Downloading Gentoo stage-3 in background..."
 	curl -LO https://distfiles.gentoo.org/releases/arm64/autobuilds/20260201T231555Z/stage3-arm64-musl-llvm-20260201T231555Z.tar.xz >/dev/null 2>&1 && mv stage3-arm64-musl-llvm*.tar.xz stage3-arm64-musl-llvm.tar.xz &
