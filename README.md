@@ -1,8 +1,7 @@
 # core3566
 
 ## gentoo installation
-- For kernel-6, follow https://ferryfair.com/files/md.html?files/notes/Core3566.md
-
+- For kernel-6, follow https://ferryfair.com/md.html?files/notes/Core3566.md
 - Read on to use Luckfox SDK for old kernel-4
 
 1. Follow https://wiki.luckfox.com/Core3566/Core3566-SDK up to 6th point.
