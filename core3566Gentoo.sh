@@ -2,6 +2,7 @@
 set -x
 if ! [ -f installGentoo-1.sh ]; then
    curl -LO https://raw.githubusercontent.com/Necktwi/core3566/refs/heads/master/installGentoo-1.sh
+   chmod +x installGentoo-1.sh
 fi
 . installGentoo-1.sh
 if [ "${1:-default}" == "clean" ]; then
@@ -28,6 +29,7 @@ if ! [ -f installGentoo.sh ]; then
 	echoH "Downloading build scripts..."
 	curl -LO https://raw.githubusercontent.com/Necktwi/core3566/refs/heads/master/installGentoo.sh
 	curl -LO https://raw.githubusercontent.com/Necktwi/core3566/refs/heads/master/installGentoo2.sh
+   chmod +x installGentoo*
 fi
 if ! [ -f stage3-arm64-musl-llvm.tar.xz ]; then
 	echoH "Downloading Gentoo stage-3 in background..."
