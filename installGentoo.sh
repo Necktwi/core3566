@@ -22,45 +22,24 @@ emerge -vnk app-eselect/eselect-repository crossdev sudo sys-fs/mtools sys-fs/do
 
 lsusb
 
-# eselect repository enable gentoo
-# ESELREPCNF=/etc/portage/repos.conf/eselect-repo.conf
-# if [ ! -d /etc/portage/repos.conf ]; then
-# 	mkdir -p /etc/portage/repos.conf
-# 	tee ${ESELREPOCONF} > /dev/null <<EOF
-# [DEFAULT]
-# main-repo = gentoo
-# [gentoo]
-# location = /var/db/repos/gentoo
-# sync-type = git
-# sync-uri = https://github.com/gentoo-mirror/gentoo.git
-# auto-sync = yes
-# EOF
-# 	emerge --sync
-# elif [ -f ${ESELREPCNF} ] && grep 'sync-type = rsync' ${ESELREPCNF}; then
-# 	sed -i 's/sync-type = rsync/sync-type = git/' ${ESELREPCNF}
-# 	sed -i 's/^sync-uri.*/sync-uri = https:\/\/github.com\/gentoo\/gentoo.git/' ${ESELREPCNF}
-# 	emerge --sync
-# fi
-
 echoH "Making cross root..."
 if ! grep cross_llvm-aarch64 /etc/portage/repos.conf/eselect-repo.conf; then
-	eselect repository create cross_llvm-aarch64-gentoo-linux-musl
-	tee -a /etc/portage/repos.conf/eselect-repo.conf > /dev/null <<EOF
-priority = 10
-masters = gentoo
-auto-sync = no
-EOF
+	eselect repository create crossdev
 fi
 
-if ! aarch64-gentoo-linux-musl-clang --version; then
-	crossdev -oS cross_llvm-aarch64-gentoo-linux-musl --llvm -P "-vkn" --target aarch64-gentoo-linux-musl
+if ! ${TGTTPL}-clang --version; then
+	crossdev --llvm -P "-vkn" --target ${TGTTPL}
 fi
 
 echoH "Extracting Gentoo..."
 cd /usr/
-mv aarch64-gentoo-linux-musl/etc/portage/make.conf ./
-cd aarch64-gentoo-linux-musl/
+cat ${TGTTPL}/etc/portage/make.conf
+mv ${TGTTPL}/etc/portage/make.conf ./
+cd ${TGTTPL}/
+# clean the folder before extracting stage3, delete all except the -not paths
 find . -mindepth 1      -not -path "./var/cache/binpkgs*"      -not -path "./var/db/repos/gentoo/profiles*"      -delete 2>/dev/null || true
+
+# wait for stage3 download to complete
 while ! [ -f /workspace/stage3-arm64-musl-llvm.tar.xz ]; do
 	echoH "Waiting for stage3-arm64-musl-llvm.tar.xz..."
 	sleep 5;
@@ -77,8 +56,10 @@ if ! grep ROOT= etc/portage/make.conf; then
 	echo "VIDEO_CARDS='panfrost'" >> etc/portage/make.conf
 	rm ../make.conf
 fi
-PROFILE=/usr/aarch64-gentoo-linux-musl/etc/portage/make.profile
-aarch64-gentoo-linux-musl-emerge -vkn sudo
+
+${TGTTPL}-emerge --info # for debug
+${TGTTPL}-emerge -vkn sudo
+file ./usr/bin/sudo # for debug
 
 echoH "Creating user..."
 if username=$(getent passwd 1000); then
@@ -89,13 +70,13 @@ read -p "Enter username: " username
 useradd $username
 passwd $username
 usermod $username -aG wheel
-cp /etc/{passwd,group,shadow} /usr/aarch64-gentoo-linux-musl/etc/
-rsync -avpPh /home/$username /usr/aarch64-gentoo-linux-musl/home/
-sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /usr/aarch64-gentoo-linux-musl/etc/sudoers
+cp /etc/{passwd,group,shadow} /usr/${TGTTPL}/etc/
+rsync -avpPh /home/$username /usr/${TGTTPL}/home/
+sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /usr/${TGTTPL}/etc/sudoers
 sed -i 's/^# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers
 
 echoH "Making root folders..."
-mkdir -p /usr/aarch64-gentoo-linux-musl/{dev,proc,sys,run,mnt,media,var/log,var/run/faillock,tmp}
+mkdir -p /usr/${TGTTPL}/{dev,proc,sys,run,mnt,media,var/log,var/run/faillock,tmp}
 
 echoH "logging in as $username"
 runuser -u $username -- /workspace/installGentoo2.sh

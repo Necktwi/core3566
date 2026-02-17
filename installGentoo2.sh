@@ -23,8 +23,8 @@ fi
 
 echoH "Building u-boot..."
 cd u-boot
-make LLVM=1 LLVM_IAS=1 ARCH=arm SUBARCH=arm64 HOSTCC=clang CC=aarch64-gentoo-linux-musl-clang AS=aarch64-gentoo-linux-musl-clang LD=ld.lld AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip READELF=llvm-readelf ELFEDIT=llvm-elfedit CROSS_COMPILE=aarch64-gentoo-linux-musl- ROCKCHIP_TPL=../rkbin/bin/rk35/rk3566_ddr_1056MHz_v1.23.bin BL31=../rkbin/bin/rk35/rk3568_bl31_v1.45.elf TEE=../rkbin/bin/rk35/rk3568_bl32_v2.15.bin core3566-rk3566_defconfig
-make LLVM=1 LLVM_IAS=1 ARCH=arm SUBARCH=arm64 HOSTCC=clang CC=aarch64-gentoo-linux-musl-clang AS=aarch64-gentoo-linux-musl-clang LD=ld.lld AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip READELF=llvm-readelf ELFEDIT=llvm-elfedit CROSS_COMPILE=aarch64-gentoo-linux-musl- ROCKCHIP_TPL=../rkbin/bin/rk35/rk3566_ddr_1056MHz_v1.23.bin BL31=../rkbin/bin/rk35/rk3568_bl31_v1.45.elf TEE=../rkbin/bin/rk35/rk3568_bl32_v2.15.bin -j`nproc`
+make LLVM=1 LLVM_IAS=1 ARCH=arm SUBARCH=arm64 HOSTCC=clang CC=${TGTTPL}-clang AS=${TGTTPL}-clang LD=ld.lld AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip READELF=llvm-readelf ELFEDIT=llvm-elfedit CROSS_COMPILE=${TGTTPL}- ROCKCHIP_TPL=../rkbin/bin/rk35/rk3566_ddr_1056MHz_v1.23.bin BL31=../rkbin/bin/rk35/rk3568_bl31_v1.45.elf TEE=../rkbin/bin/rk35/rk3568_bl32_v2.15.bin core3566-rk3566_defconfig
+make LLVM=1 LLVM_IAS=1 ARCH=arm SUBARCH=arm64 HOSTCC=clang CC=${TGTTPL}-clang AS=${TGTTPL}-clang LD=ld.lld AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip READELF=llvm-readelf ELFEDIT=llvm-elfedit CROSS_COMPILE=${TGTTPL}- ROCKCHIP_TPL=../rkbin/bin/rk35/rk3566_ddr_1056MHz_v1.23.bin BL31=../rkbin/bin/rk35/rk3568_bl31_v1.45.elf TEE=../rkbin/bin/rk35/rk3568_bl32_v2.15.bin -j`nproc`
 
 cd ~/workspace
 if [ ! -d linux ]; then
@@ -34,18 +34,18 @@ fi
 
 echoH "Building Linux ..."
 cd linux
-make LLVM=1 LLVM_IAS=1 ARCH=arm64 HOSTCC=clang CC=aarch64-gentoo-linux-musl-clang luckfox_core3566_linux_defconfig
-make LLVM=1 LLVM_IAS=1 ARCH=arm64 HOSTCC=clang CC=aarch64-gentoo-linux-musl-clang DTC_FLAGS="-@" Image rockchip/rk3566-core3566.dtb modules -j`nproc`
+make LLVM=1 LLVM_IAS=1 ARCH=arm64 HOSTCC=clang CC=${TGTTPL}-clang luckfox_core3566_linux_defconfig
+make LLVM=1 LLVM_IAS=1 ARCH=arm64 HOSTCC=clang CC=${TGTTPL}-clang DTC_FLAGS="-@" Image rockchip/rk3566-core3566.dtb modules -j`nproc`
 
 echoH "Installing modules..."
-sudo make LLVM=1 LLVM_IAS=1 ARCH=arm64 HOSTCC=clang CC=aarch64-gentoo-linux-musl-clang INSTALL_MOD_PATH=/usr/aarch64-gentoo-linux-musl/ modules_install
+sudo make LLVM=1 LLVM_IAS=1 ARCH=arm64 HOSTCC=clang CC=${TGTTPL}-clang INSTALL_MOD_PATH=/usr/${TGTTPL}/ modules_install
 
 echoH "Enabling prompt on serial port..."
-sudo sed -i 's|f0:12345:respawn:/sbin/agetty 9600 ttyAMA0 vt100|s2:12345:respawn:/sbin/agetty -L ttyS2 1500000 vt100|' /usr/aarch64-gentoo-linux-musl/etc/inittab
+sudo sed -i 's|f0:12345:respawn:/sbin/agetty 9600 ttyAMA0 vt100|s2:12345:respawn:/sbin/agetty -L ttyS2 1500000 vt100|' /usr/${TGTTPL}/etc/inittab
 
-if ! grep PARTLABEL /usr/aarch64-gentoo-linux-musl/etc/fstab; then
+if ! grep PARTLABEL /usr/${TGTTPL}/etc/fstab; then
 	echoH "Setting up kernel to mount partitions on root filesystem on boot..."
-	sudo tee -a /usr/aarch64-gentoo-linux-musl/etc/fstab <<EOF
+	sudo tee -a /usr/${TGTTPL}/etc/fstab <<EOF
 PARTLABEL=boot		/boot		vfat		defaults	1 2
 PARTLABEL=rootfs	/			ext4		defaults	0 1
 EOF
@@ -84,7 +84,7 @@ mcopy -i bootCore3566.img -o extlinuxCore3566.conf ::extlinux/extlinux.conf
 mcopy -i bootCore3566.img -o linux/arch/arm64/boot/Image ::Image
 
 echoH "Preparing first boot script..."
-tee /usr/aarch64-gentoo-linux-musl/etc/local.d/firstBoot.sh<<EOF
+sudo tee /usr/${TGTTPL}/etc/local.d/firstBoot.sh<<EOF
 #!/bin/bash
 CON="/dev/console"
 sed -i '/^CBUILD=/d' /etc/portage/make.conf
@@ -95,17 +95,19 @@ rm /etc/local.d/firstBoot.sh
 EOF
 
 echoH "Enabling software clock..."
-pushd /usr/aarch64-gentoo-linux-musl/etc/runlevels/boot/
+pushd /usr/${TGTTPL}/etc/runlevels/boot/
 if ! [ -f ./swclock ]; then
 	sudo ln -s /etc/init.d/swclock ./
 fi
-sudo mkdir -p /usr/aarch64-gentoo-linux-musl/var/lib/misc
-sudo touch /usr/aarch64-gentoo-linux-musl/var/lib/misc/openrc-shutdowntime
+sudo mkdir -p /usr/${TGTTPL}/var/lib/misc
+sudo touch /usr/${TGTTPL}/var/lib/misc/openrc-shutdowntime
 popd
 
 echoH "Making rootfs..."
-sudo rm rootfsCore3566GentooMuslLlvm.img
-sudo mke2fs -d /usr/aarch64-gentoo-linux-musl/ -t ext4 rootfsCore3566GentooMuslLlvm.img 2G
+if [ -f rootfsCore3566GentooMuslLlvm.img ]; then
+   sudo rm rootfsCore3566GentooMuslLlvm.img
+fi
+sudo mke2fs -d /usr/${TGTTPL}/ -t ext4 rootfsCore3566GentooMuslLlvm.img 2G
 
 if [ ! -f parameterCore3566.txt ]; then
 	echoH "Planning disk layout..."

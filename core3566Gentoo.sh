@@ -1,17 +1,18 @@
 #!/bin/bash
 set -x
-if ! [ -f installGentoo-1.sh ]; then
-   curl -LO https://raw.githubusercontent.com/Necktwi/core3566/refs/heads/master/installGentoo-1.sh
-   chmod +x installGentoo-1.sh
-fi
-. installGentoo-1.sh
 if [ "${1:-default}" == "clean" ]; then
 	docker rm gentooMuslLlvm
 	rm -rf ~/workspace/u-boot
 	rm -rf ~/workspace/linux
 	rm -rf ~/workspace/rkbin
 	sudo rm -rf ~/workspace/aarch64-gentoo-linux-musl
+   rm installGentoo*
 fi
+if ! [ -f installGentoo-1.sh ]; then
+   curl -LO https://raw.githubusercontent.com/Necktwi/core3566/refs/heads/master/installGentoo-1.sh
+   chmod +x installGentoo-1.sh
+fi
+. installGentoo-1.sh
 set -euo pipefail  # Exit on error, unset variables, and pipeline failures
 echoH "Connect ur Core3566, preparing to detect it..."
 sudo tee /etc/udev/rules.d/99-rockchip.rules > /dev/null <<EOF
@@ -20,8 +21,11 @@ EOF
 sudo udevadm control --reload-rules && sudo udevadm trigger
 
 echoH "Creating required folders..."
-mkdir -p ~/workspace/aarch64-gentoo-linux-musl
+# rootfs folder
+mkdir -p ~/workspace/${TGTTPL}
+# gentoo ebuilds repo
 mkdir -p ~/workspace/gentooRepos
+# upstream tar balls are stored here
 mkdir -p ~/workspace/distfiles
 cd ~/workspace
 
@@ -38,4 +42,4 @@ else
 	echoH "stage3-arm64-musl-llvm.tar.xz already here."
 fi
 echoH "Spinning up Gentoo container..."
-docker run --name gentooMuslLlvm -v ${HOME}/workspace/aarch64-gentoo-linux-musl:/usr/aarch64-gentoo-linux-musl -v ${HOME}/workspace:/workspace -v ${HOME}/workspace/gentooRepos:/var/db/repos -v ${HOME}/workspace/gentooRepos/gentoo/profiles:/usr/aarch64-gentoo-linux-musl/var/db/repos/gentoo/profiles -v ${HOME}/workspace/aarch64pkgdir:/usr/aarch64-gentoo-linux-musl/var/cache/binpkgs -it --privileged --device-cgroup-rule='c 189:* rmw' -v /dev/bus/usb:/dev/bus/usb gentoo/stage3:musl-llvm-20260126 /bin/bash /workspace/installGentoo.sh || docker start -ai gentooMuslLlvm
+docker run --name gentooMuslLlvm -v ${HOME}/workspace/${TGTTPL}:/usr/${TGTTPL} -v ${HOME}/workspace:/workspace -v ${HOME}/workspace/gentooRepos:/var/db/repos -v ${HOME}/workspace/gentooRepos/gentoo/profiles:/usr/${TGTTPL}/var/db/repos/gentoo/profiles -v ${HOME}/workspace/aarch64pkgdir:/usr/${TGTTPL}/var/cache/binpkgs -it --privileged --device-cgroup-rule='c 189:* rmw' -v /dev/bus/usb:/dev/bus/usb gentoo/stage3:musl-llvm-20260126 /bin/bash /workspace/installGentoo.sh || docker start -ai gentooMuslLlvm
