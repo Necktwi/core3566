@@ -11,7 +11,7 @@ if ! grep DISTDIR /etc/portage/make.conf; then
 	echo 'FEATURES="buildpkg"' >> $MKCNF
 fi
 cat /etc/portage/make.conf
-emerge -vnk app-eselect/eselect-repository crossdev sudo sys-fs/mtools sys-fs/dosfstools swig sys-devel/bc sudo sys-fs/dosfstools virtual/libudev dev-libs/libusb sys-apps/usbutils dev-python/pyelftools dev-vcs/git
+emerge -vnk app-eselect/eselect-repository crossdev sys-fs/mtools sys-fs/dosfstools swig sys-devel/bc sudo sys-fs/dosfstools virtual/libudev dev-libs/libusb sys-apps/usbutils dev-python/pyelftools dev-vcs/git
 
 lsusb
 
@@ -49,7 +49,7 @@ if ! grep ROOT= etc/portage/make.conf; then
 	rm ../make.conf
 fi
 
-CC="${TGTTPL}-clang" CXX="${TGTTPL}-clang++" CPP="${TGTTPL}-clang-cpp" ${TGTTPL}-emerge -vkn sudo
+CC="${TGTTPL}-clang" CXX="${TGTTPL}-clang++" CPP="${TGTTPL}-clang-cpp" ${TGTTPL}-emerge -vkn sudo app-admin/sysklogd
 file ./usr/bin/sudo | grep aarch64 # check if merged sudo is aarch64 bin
 
 echoH "Creating user..."

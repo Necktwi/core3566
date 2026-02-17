@@ -82,15 +82,16 @@ mcopy -i bootCore3566.img -o extlinuxCore3566.conf ::extlinux/extlinux.conf
 mcopy -i bootCore3566.img -o linux/arch/arm64/boot/Image ::Image
 
 echoH "Preparing first boot script..."
-sudo tee /usr/${TGTTPL}/etc/local.d/firstBoot.sh<<EOF
+sudo tee /usr/${TGTTPL}/etc/local.d/firstBoot.start<<EOF
 #!/bin/bash
 CON="/dev/console"
 sed -i '/^CBUILD=/d' /etc/portage/make.conf
-sed -i '/^ROOT=/d' /etc/portage/make.conf
+sed -i 's/^ROOT=.*/ROOT="\/"/' /etc/portage/make.conf
 echo "Expanding rootfs..."
 resize2fs /dev/mmcblk1p2
-rm /etc/local.d/firstBoot.sh
+rm /etc/local.d/firstBoot.start
 EOF
+sudo chmod +x /usr/${TGTTPL}/etc/local.d/firstBoot.start
 
 echoH "Enabling software clock..."
 pushd /usr/${TGTTPL}/etc/runlevels/boot/
@@ -99,6 +100,16 @@ if ! [ -f ./swclock ]; then
 fi
 sudo mkdir -p /usr/${TGTTPL}/var/lib/misc
 sudo touch /usr/${TGTTPL}/var/lib/misc/openrc-shutdowntime
+
+echoH "Enabling ssh server..."
+if ! [ -f ./sshd ]; then
+	sudo ln -s /etc/init.d/sshd ./
+fi
+
+echoH "Enabling system log ..."
+if ! [ -f ./sysklogd ]; then
+	sudo ln -s /etc/init.d/sysklogd ./
+fi
 popd
 
 echoH "Making rootfs..."
@@ -160,4 +171,4 @@ sudo ./rkdeveloptool wl 0x25000 ../rootfsCore3566GentooMuslLlvm.img
 echoH "Done! Rebooting..."
 sudo ./rkdeveloptool rd
 
-echoHB "Gentoo installed."
+echoHB "Gentoo installed.\n"
