@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 if [ "${1:-default}" == "clean" ]; then
 	docker rm gentooMuslLlvm
 	rm -rf ~/workspace/u-boot

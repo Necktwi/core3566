@@ -1,14 +1,7 @@
 #!/bin/bash
-set -euo pipefail
-set -x
 . /workspace/installGentoo-1.sh
 . /etc/profile
 MKCNF=/etc/portage/make.conf
-# if ! grep FEATURES $MKCNF; then
-# 	echo 'FEATURES="getbinpkg binpkg-request-signature"' >> $MKCNF;
-# elif ! grep getbinpgk $MKCNF; then
-# 	sed -i '/^FEATURES=/s/"$/ getbinpkg binpkg-request-signature"/' $MKCNF
-# fi
 
 echoH "Merging build tools..."
 emerge --sync
@@ -23,11 +16,10 @@ emerge -vnk app-eselect/eselect-repository crossdev sudo sys-fs/mtools sys-fs/do
 lsusb
 
 echoH "Making cross root..."
-if ! grep cross_llvm-aarch64 /etc/portage/repos.conf/eselect-repo.conf; then
-	eselect repository create crossdev
-fi
+eselect repository create crossdev || true
 
-if ! ${TGTTPL}-clang --version; then
+if ! emerge -p cross_llvm-aarch64-gentoo-linux-musl/libcxx | grep "\[ebuild   R"; then
+   echoH "Merging cross target..."
 	crossdev --llvm -P "-vkn" --target ${TGTTPL}
 fi
 
@@ -35,7 +27,7 @@ echoH "Extracting Gentoo..."
 cd /usr/
 cat ${TGTTPL}/etc/portage/make.conf
 mv ${TGTTPL}/etc/portage/make.conf ./
-cd ${TGTTPL}/
+cd /usr/${TGTTPL}/
 # clean the folder before extracting stage3, delete all except the -not paths
 find . -mindepth 1      -not -path "./var/cache/binpkgs*"      -not -path "./var/db/repos/gentoo/profiles*"      -delete 2>/dev/null || true
 
@@ -57,9 +49,8 @@ if ! grep ROOT= etc/portage/make.conf; then
 	rm ../make.conf
 fi
 
-${TGTTPL}-emerge --info # for debug
-${TGTTPL}-emerge -vkn sudo
-file ./usr/bin/sudo # for debug
+CC="${TGTTPL}-clang" CXX="${TGTTPL}-clang++" CPP="${TGTTPL}-clang-cpp" ${TGTTPL}-emerge -vkn sudo
+file ./usr/bin/sudo | grep aarch64 # check if merged sudo is aarch64 bin
 
 echoH "Creating user..."
 if username=$(getent passwd 1000); then

@@ -10,3 +10,5 @@ function echoHB () {
 	echo -e "\n${BLINK}${BGBLACK}${HBLUE}$1${NC}"
 }
 TGTTPL=aarch64-gentoo-linux-musl
+set -euo pipefail
+set -x

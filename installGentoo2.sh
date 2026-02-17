@@ -1,6 +1,4 @@
 #!/bin/bash
-set -euo pipefail
-set -x
 . /workspace/installGentoo-1.sh
 
 . /etc/profile
