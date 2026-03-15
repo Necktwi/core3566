@@ -27,7 +27,7 @@ make LLVM=1 LLVM_IAS=1 ARCH=arm SUBARCH=arm64 HOSTCC=clang CC=${TGTTPL}-clang AS
 cd ~/workspace
 if [ ! -d linux ]; then
 	echoH "Cloning Linux..."
-	git clone --depth=1 --recurse-submodules -b v6.18-core3566 https://github.com/Necktwi/linux.git
+	git clone --depth=1 --recurse-submodules -b v6.19-core3566 https://github.com/Necktwi/linux.git
 fi
 
 echoH "Building Linux ..."
