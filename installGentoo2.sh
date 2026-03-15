@@ -33,7 +33,7 @@ fi
 echoH "Building Linux ..."
 cd linux
 make LLVM=1 LLVM_IAS=1 ARCH=arm64 HOSTCC=clang CC=${TGTTPL}-clang luckfox_core3566_linux_defconfig
-make LLVM=1 LLVM_IAS=1 ARCH=arm64 HOSTCC=clang CC=${TGTTPL}-clang DTC_FLAGS="-@" Image rockchip/rk3566-core3566.dtb modules -j`nproc`
+make LLVM=1 LLVM_IAS=1 ARCH=arm64 HOSTCC=clang CC=${TGTTPL}-clang DTC_FLAGS="-@" -j`nproc` Image rockchip/rk3566-core3566.dtb rockchip/rk3566-gpu.dtbo rockchip/core3566-waveshare-cm4-io-base-b-usb.dtbo rockchip/core3566-waveshare-cm4-io-base-b-hdmi.dtbo rockchip/core3566-waveshare-cm4-io-base-b-rtc.dtbo modules
 
 echoH "Installing modules..."
 sudo make LLVM=1 LLVM_IAS=1 ARCH=arm64 HOSTCC=clang CC=${TGTTPL}-clang INSTALL_MOD_PATH=/usr/${TGTTPL}/ modules_install
@@ -56,6 +56,7 @@ if [ ! -f extlinuxCore3566.conf ]; then
 LABEL Linux
 KERNEL /Image
 FDT /rk3566.dtb
+FDTOVERLAYS /core3566-waveshare-cm4-io-base-b-usb.dtbo /core3566-waveshare-cm4-io-base-b-hdmi.dtbo
 APPEND root=PARTLABEL=rootfs rw rootwait earlycon=uart8250,mmio32,0xfe660000 console=ttyS2,1500000
 EOF
 fi
