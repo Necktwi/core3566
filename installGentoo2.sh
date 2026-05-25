@@ -57,7 +57,7 @@ LABEL Linux
 KERNEL /Image
 FDT /rk3566.dtb
 FDTOVERLAYS /core3566-waveshare-cm4-io-base-b-usb.dtbo /core3566-waveshare-cm4-io-base-b-hdmi.dtbo
-APPEND root=PARTLABEL=rootfs rw rootwait earlycon=uart8250,mmio32,0xfe660000 console=ttyS2,1500000
+APPEND root=PARTLABEL=rootfs rw rootwait earlycon=uart8250,mmio32,0xfe660000 console=ttyS2,1500000 console=tty1
 EOF
 fi
 

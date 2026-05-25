@@ -1,4 +1,4 @@
-# core3566
+# Core3566
 
 ## gentoo installation
 - For kernel-6, follow https://ferryfair.com/md.html?files/notes/Core3566.md
