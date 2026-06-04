@@ -1,6 +1,6 @@
 # Core3566
 
-## gentoo installation
+## Gentoo installation
 - For kernel-6, follow https://ferryfair.com/md.html?files/notes/Core3566.md
 - Read on to use Luckfox SDK for old kernel-4
 
@@ -29,7 +29,7 @@ export RK_ROOTFS_SYSTEM=gentoo
 2. once the Core3566 is booted expand the root partition using
 - `sudo resize2fs /dev/mmcblk0p6`
 
-## to build and install only kernel
+## To build and install only kernel
 1. start the vboxvm
 ```bash
 export RK_ROOTFS_SYSTEM=gentoo
@@ -43,7 +43,7 @@ cp .config core3566/kernel-4.19.232/arch/arm64/configs/luckfox_core3566_linux_de
 3. start `rkdevtool.exe` and connect core3566
 4. Add Item, set name boot, address as per parameter.txt(the hex number next to @), path to boot.img and Run.
 
-### to generate full image without rebuilding everything
+### To generate full image without rebuilding everything
 ```bash
 NOCLEAN=1 ./build.sh updateimg
 ```
