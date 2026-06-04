@@ -33,7 +33,7 @@ chmod +x core3566Gentoo.sh
 - I'm not working with Luckfox, I just bought Core3566 from an online store.
   The info I gathered here is from Luckfox online resources and my observations.
 - Anyone who wants to augment this document can pull request https://github.com/Necktwi/Core3566.git the augmented [Linux6+.md](https://github.com/Necktwi/Core3566/blob/master/Linux6%2B.md).
-- <img src="https://docs.nano.org/images/nano-logo.svg" alt="XNO" style="height:3mm;position:relative;bottom:-0.6mm;"/> [nano_3i6jsqrbeyr35yxr1htdhkpfksz7amx77589h13waj3reaziwxrjsk75z8q7](https://github.com/Necktwi/Core3566/blob/25ed17826d4bc86063e290f5f29c5d27d5cd981b/XNO.jpg)
+- [<img src="https://docs.nano.org/images/nano-logo.svg" alt="XNO" style="height:3mm;position:relative;bottom:-0.6mm;"/>](https://github.com/Necktwi/Core3566/blob/e40072980e63158b7d03ae6ba37ea8ba9c381875/XNO.jpg) nano_3i6jsqrbeyr35yxr1htdhkpfksz7amx77589h13waj3reaziwxrjsk75z8q7
 
 ### Overlays
 - To disable `HDMI` and `USB`, may b to conserve power, remove `/core3566-waveshare-cm4-io-base-b-usb.dtbo /core3566-waveshare-cm4-io-base-b-hdmi.dtbo` from `FDTOVERLAYS` in `/boot/extlinux/extlinux.conf`
