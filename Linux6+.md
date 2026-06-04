@@ -34,7 +34,8 @@ chmod +x core3566Gentoo.sh
 - I'm not working with Luckfox, I just bought Core3566 from an online store.
   The info I gathered here is from Luckfox online resources and my observations.
 - Anyone who wants to augment this document can pull request
-  https://github.com/Necktwi/Core3566.git
+  https://github.com/Necktwi/Core3566.git the augmented
+  [Linux6+.md](https://github.com/Necktwi/Core3566/blob/master/Linux6%2B.md).
 ### Overlays
 - To disable `HDMI` and `USB`, may b to conserve power, remove `/core3566-waveshare-cm4-io-base-b-usb.dtbo /core3566-waveshare-cm4-io-base-b-hdmi.dtbo` from `FDTOVERLAYS` in `/boot/extlinux/extlinux.conf`
 - To enable `CMOS RTC` add `/core3566-waveshare-cm4-io-base-b-rtc.dtbo` to overlays and add `blacklist rtc_rk808` to `/etc/modprobe.d/blacklist-rtc-rk808.conf`
