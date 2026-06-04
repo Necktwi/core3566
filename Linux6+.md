@@ -19,9 +19,8 @@ chmod +x core3566Gentoo.sh
 
 ### Closure
 - My Core3566 booting no more, donno what took it down, possibly mounting it on
-  RPi CM4 IO Base which takes 12V input, it should not be the reason, after
-  which i realised there should red led on Core3566 which is no more. Usually
-  I mount it on Waveshare IO-base-b.
+  RPi CM4 IO Base which takes 12V input, it should not be the reason though. After which i realised there should red led on Core3566 which is no more.
+  Usually I mount it on Waveshare IO-base-b.
 - Since very beginning, nvme gave IO error randomly.
 - After few months while i'm trying to get IMX219 working with Kernel-7, i've
   connected its UART2 to ESP-WROOM-32D UART0(5v) by mistake and it stopped
@@ -33,9 +32,9 @@ chmod +x core3566Gentoo.sh
   Waveshare-io-base-b is working fine, now I mounted BPiCM4 on it.
 - I'm not working with Luckfox, I just bought Core3566 from an online store.
   The info I gathered here is from Luckfox online resources and my observations.
-- Anyone who wants to augment this document can pull request
-  https://github.com/Necktwi/Core3566.git the augmented
-  [Linux6+.md](https://github.com/Necktwi/Core3566/blob/master/Linux6%2B.md).
+- Anyone who wants to augment this document can pull request https://github.com/Necktwi/Core3566.git the augmented [Linux6+.md](https://github.com/Necktwi/Core3566/blob/master/Linux6%2B.md).
+- <img src="https://docs.nano.org/images/nano-logo.svg" alt="XNO" style="height:3mm;position:relative;bottom:-0.6mm;"/> [nano_3i6jsqrbeyr35yxr1htdhkpfksz7amx77589h13waj3reaziwxrjsk75z8q7](XNO.jpg)
+
 ### Overlays
 - To disable `HDMI` and `USB`, may b to conserve power, remove `/core3566-waveshare-cm4-io-base-b-usb.dtbo /core3566-waveshare-cm4-io-base-b-hdmi.dtbo` from `FDTOVERLAYS` in `/boot/extlinux/extlinux.conf`
 - To enable `CMOS RTC` add `/core3566-waveshare-cm4-io-base-b-rtc.dtbo` to overlays and add `blacklist rtc_rk808` to `/etc/modprobe.d/blacklist-rtc-rk808.conf`
